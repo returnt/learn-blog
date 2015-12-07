@@ -1,0 +1,14 @@
+AddDefaultCharset utf-8
+
+RewriteEngine On
+RewriteBase /
+RewriteRule ^([a-z]+)/?([a-z]*)/?([a-z0-9]*)/?$ index.php?search=$1&action=$2&check=$3
+
+
+#/index.php?search=main
+
+#/index.php?search=main&action=index
+
+#/index.php?search=main&action=index&check=7
+
+#mysite.com/
