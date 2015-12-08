@@ -7,7 +7,7 @@ class query_orm{
     protected $HOST = 'localhost';
     protected $USER = 'root';
     protected $PASSWORD = '';
-    protected $DB = 'chat';
+    protected $DB = 'blog';
     protected $fpdo;
             
     function __construct() {

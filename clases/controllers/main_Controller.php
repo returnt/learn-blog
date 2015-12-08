@@ -2,6 +2,7 @@
 session_start();
 
 require_once 'clases/root_Controller.php';
+require_once 'models/user_Model.php';
 
 class main_Controller extends root_Controller {
 
@@ -30,7 +31,7 @@ class main_Controller extends root_Controller {
             $data['error_name'] = $this->solve_sign(1, $data['name'], 2, 20);
             $data['error_first_name'] = $this->solve_sign(1, $data['first_name'], 2, 50);
             $data['error_patronumic'] = $this->solve_sign(1, $data['patronumic'], 0, 25);
-			//валидация поля error_tel
+            $data['error_tel'] = $this->solve_sign(6, $data['tel'], 13, 13);
             $data['error_email'] = $this->solve_sign(5, $data['email'], 2, 70);
             $data['error_password'] = $this->solve_sign(4, $password, 8, 25);
             $data['error_akcept_password'] = $this->solve_sign(4, $akcept_password, 8, 25);
@@ -45,8 +46,8 @@ class main_Controller extends root_Controller {
                 }  else {
 
                     try {
-						
-                        $post_valid = //очистка входящих данных от пользователя
+
+                        $post_valid = $this->clean_injection($_POST);
 
                         $user_Model = new user_Model();
                         $user_unique = $user_Model->user_unique($post_valid['tel']);
@@ -56,7 +57,7 @@ class main_Controller extends root_Controller {
                             $user_Model->add_new_user($post_valid);
                             $user_next = $user_Model->last_user();
                             $user_Model->add_new_user_rol($user_next);
-                            $token = //получить случайное число и от него хеш
+                            $token = md5(rand());
                             $user_Model->set_user_tocen($user_next[0][0], $token, 'User registration: '.$user_next[0][0]);
                             
                             $this->get_mail(0, 'Регистрация на сайте kydosupport.com', 'Для подтверждения регистриции перейдите по ссыдке: http://kydosupport.com/main/regverification/'.$token, $post_valid['email']);
@@ -74,7 +75,7 @@ class main_Controller extends root_Controller {
         $this->theme_view('main_View', 'reg_View', $data);        
     }
 
-    /*public function regform_Action($check) {
+    public function regform_Action($check) {
 
         $data = array();
         $data['get'] = $check;
@@ -230,21 +231,5 @@ class main_Controller extends root_Controller {
         
     }
     
-    public function projectsignature_Action() {
-        
-        $user_zakaz = new kabinet_Model();
-        
-        $signature_privat_data = $_POST['data'];
-        $signature_privat_signature = $_POST['signature'];
-        
-        /*$public_key = 'i66305871306';
-        $private_key = '5p24goqOarOLLHQ2W3Juk3e1GYfKfww6ikqyPCYd';
-        $sign = base64_encode( sha1( 
-        $private_key .  
-        $signature_privat_data . 
-        $private_key 
-       , 1 ));*/
-        
-        /*$user_zakaz->user_zakaz_signature_privat_otvet($signature_privat_data, $signature_privat_signature);
-    }*/
+    
 }
